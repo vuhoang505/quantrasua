@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trà Sữa HONGKONG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">HONGKONG 茶</div>
+        <button class="cart-icon" onclick="toggleCart()">
+            🛒 GIỎ HÀNG
+            <span class="cart-count" id="cartCount">0</span>
+        </button>
+    </header>
+
+    <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-box">
+
+        <button onclick="closeCart()" class="close-btn">✖</button>
+
+        <h3>Giỏ hàng</h3>
+
+        <div id="cartItems"></div>
+
+        <h4 id="cartTotal">0 ₫</h4>
+
+        <button onclick="checkout()">Thanh toán</button>
+        <button onclick="clearCart()" style="
+            width:100%;
+            margin-top:10px;
+            padding:12px;
+            border:none;
+            border-radius:12px;
+            background:#ff4d4d;
+            color:white;
+            font-weight:700;
+            cursor:pointer;
+        ">
+            🗑 Xóa sạch giỏ hàng
+        </button>
+
+    </div>
+</div>
+
+<!-- OVERLAY BẮT BUỘC -->
+<div id="overlay" onclick="closeCart()"></div>
+
+    <section class="hero">
+        <h1>Hương Vị Cổ Xưa</h1>
+        <p>Quán trà sữa HONGKONG là điểm đến lý tưởng dành cho những ai yêu thích hương vị trà sữa đậm đà và phong cách hiện đại. Với menu đa dạng từ trà sữa truyền thống, trà trái cây tươi mát đến các món topping phong phú, HONGKONG mang đến trải nghiệm thưởng thức đồ uống vừa ngon miệng vừa bắt mắt. Không gian quán được thiết kế trẻ trung, thoải mái, phù hợp để gặp gỡ bạn bè, học tập hay thư giãn sau những giờ làm việc và học tập căng thẳng. HONGKONG luôn chú trọng chất lượng nguyên liệu và dịch vụ, nhằm đem lại sự hài lòng tốt nhất cho khách hàng!</p>
+    </section>
+
+    <section class="menu-section">
+        <h2 class="section-title">MENU HONGKONG</h2>
+        <div class="product-grid" id="productGrid">
+            </div>
+    </section>
+
+    <footer class="footer">
+        <h2>Kết Nối Cùng Trà Sữa HONGKONG</h2>
+        
+        <div class="social-links">
+            <a href="#" target="_blank" class="facebook">🌐 Facebook Fanpage</a>
+            <a href="#" target="_blank" class="tiktok">🎵 TikTok Official</a>
+        </div>
+
+        <p style="color: #ccc; font-size: 1.2em; margin-top: 20px;">Gọi ngay để đặt hàng:</p>
+        <div class="contact-phone">
+            📞 0987.654.321
+        </div>
+
+        <div class="footer-copy">
+            Hân Hạnh Được Phục Vụ Quý Khách!
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+<div class="cart-overlay" onclick="closeCart()"></div>
+</html>

@@ -1,0 +1,200 @@
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HONGKONG ERP</title>
+
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+
+    <body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">HONGKONG ERP</div>
+
+        <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</div>
+        <div class="nav-item" onclick="switchTab('orders', this)">🛒 Đơn hàng</div>
+        <div class="nav-item" onclick="switchTab('products', this)">🧋 Sản phẩm</div>
+        <div class="nav-item" onclick="switchTab('inventory', this)">📦 Kho</div>
+        <div class="nav-item" onclick="switchTab('customers', this)">👥 Khách hàng</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>Hệ thống quản trị - HONGKONG Milk Tea</div>
+            <div id="currentTime"></div>
+        </div>
+
+        <div class="content-wrapper">
+
+            <!-- DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content active">
+
+                <div class="card" style="display:flex; gap:10px; align-items:center;">
+                    <span>Lọc tháng:</span>
+                    <input type="month" id="monthFilter" onchange="loadDashboard()">
+                    <button class="btn btn-primary" onclick="resetFilter()">Tất cả</button>
+
+                    <div style="margin-left:auto; font-weight:800; color:var(--success)">
+                        Doanh thu: <span id="totalRevenueDisplay">0₫</span>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:2fr 1fr; gap:20px;">
+
+                    <div class="card">
+                        <h3>Doanh thu</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Top bán chạy</h3>
+                        <div class="chart-container">
+                            <canvas id="bestsellerChart"></canvas>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th style="text-align:right">SL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblBestsellers"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ORDERS -->
+            <div id="tab-orders" class="tab-content">
+                <div class="card">
+                    <h3>Đơn hàng</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Khách</th>
+                                <th>Món</th>
+                                <th>Tổng</th>
+                                <th>Trạng thái</th>
+                                <th>In</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblOrders"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div id="tab-products" class="tab-content">
+                <div class="card">
+                    <h3>Thêm sản phẩm mới</h3>
+                    <div style="display:flex; gap:10px;">
+                        <input id="prodName" placeholder="Tên món">
+                        <input id="prodPrice" type="number" placeholder="Giá">
+                        <input type="file" id="prodImg">
+                        <button class="btn btn-primary" onclick="addProduct()">Thêm mới</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Danh sách sản phẩm</h3>
+                    <div id="tblProducts" class="product-grid"></div>
+                </div>
+            </div> <div id="productEditModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:1000;">
+                <div style="background:#fff;padding:20px;border-radius:10px;width:350px;">
+                    <h3>Sửa sản phẩm</h3>
+                    <input id="editProdName" placeholder="Tên món" style="width:100%; margin-bottom:10px; padding:8px; border:1px solid #ddd;">
+                    <input id="editProdPrice" type="number" placeholder="Giá" style="width:100%; margin-bottom:10px; padding:8px; border:1px solid #ddd;">
+                    <p style="font-size:12px; color:gray;">Chọn ảnh mới nếu muốn thay đổi:</p>
+                    <input type="file" id="editProdImg" style="width:100%; margin-bottom:10px;">
+                    <div style="display:flex; gap:10px; justify-content:flex-end;">
+                        <button onclick="confirmEditProduct()" style="background:#cc0000; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Lưu thay đổi</button>
+                        <button onclick="closeProductModal()" style="padding:8px 15px; border-radius:5px; cursor:pointer;">Hủy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVENTORY -->
+            <div id="tab-inventory" class="tab-content">
+
+                <div class="card">
+                    <h3>Nhập kho</h3>
+
+                    <div style="display:flex; gap:10px;">
+                        <input id="invName" placeholder="Tên">
+                        <input id="invQty" type="number" placeholder="Số lượng">
+                        <input id="invUnit" placeholder="Đơn vị">
+
+                        <button class="btn btn-primary" onclick="addInventory()">Thêm</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>SL</th>
+                                <th>Đơn vị</th>
+                                <th>Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblInventory"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div id="tab-customers" class="tab-content">
+        <div class="card">
+            <h3>Quản lý khách hàng</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>SĐT</th>
+                                <th>Điểm</th>
+                                <th>Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblCustomers"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;">
+        <div style="background:#fff;padding:20px;border-radius:10px;width:300px;">
+        <h3>Sửa</h3>
+        <input id="modalName" placeholder="Tên">
+        <input id="modalPhone" placeholder="SĐT">
+        <input id="modalQty" type="number" placeholder="Số lượng">
+        <input id="modalUnit" placeholder="Đơn vị">
+        <button onclick="confirmEdit()">Xác nhận</button>
+        <button onclick="closeModal()">Hủy</button>
+
+    </div>
+    </div>
+
+     <script src="admin.js"></script>
+
+    </body>
+    </html>

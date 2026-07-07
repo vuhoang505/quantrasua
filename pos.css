@@ -1,0 +1,196 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+}
+
+/* BACKGROUND GIỐNG TRANG CHỦ */
+body {
+    background: linear-gradient(135deg, #fff1f3, #f7f7fb);
+    color: #333;
+    min-height: 100vh;
+}
+
+/* HEADER */
+header {
+    padding: 18px 25px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    background: white;
+    color: #ff6b81;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* GRID ORDER */
+#pendingOrders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    padding: 20px;
+}
+
+/* CARD ORDER (đồng bộ product-card trang chủ) */
+.ticket {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transition: 0.25s;
+
+    border: 1px solid rgba(255, 107, 129, 0.1);
+}
+
+.ticket:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+/* ITEM TEXT */
+.item {
+    margin: 6px 0;
+    color: #555;
+}
+
+.total {
+    margin-top: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ff6b81;
+}
+
+/* BUTTON BASE */
+.btn {
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+/* THANH TOÁN */
+.btn-pay {
+    background: linear-gradient(135deg, #ff6b81, #ff8fab);
+    color: white;
+}
+
+.btn-pay:hover {
+    transform: scale(1.05);
+}
+
+/* IN HÓA ĐƠN */
+.btn-print {
+    background: linear-gradient(135deg, #74b9ff, #a29bfe);
+    color: white;
+}
+
+.btn-print:hover {
+    transform: scale(1.05);
+}
+
+/* MODAL BACKDROP */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(6px);
+}
+
+/* SHOW MODAL */
+.modal.active {
+    display: flex;
+}
+
+/* MODAL BOX (GIỐNG STYLE CARD TRANG CHỦ) */
+.modal-box {
+    width: 340px;
+    padding: 22px;
+    border-radius: 18px;
+
+    background: white;
+    color: #333;
+
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* INPUT */
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+
+    border: 1px solid #eee;
+    border-radius: 12px;
+
+    outline: none;
+    transition: 0.2s;
+}
+
+.modal-box input:focus {
+    border-color: #ff6b81;
+}
+
+/* TITLE */
+.modal-box h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #ff6b81;
+}
+
+/* TOTAL */
+#modalTotal {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff6b81;
+    margin: 10px 0;
+}
+
+/* BUTTON MODAL */
+.modal-box button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+
+    background: #ff6b81;
+    color: white;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.modal-box button:hover {
+    transform: scale(1.05);
+}

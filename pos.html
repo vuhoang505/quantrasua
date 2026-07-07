@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>POS HONGKONG</title>
+<link rel="stylesheet" href="pos.css">
+</head>
+
+<body>
+
+<h2>ĐƠN CHỜ THANH TOÁN</h2>
+<div id="pendingOrders"></div>
+
+<!-- ================= MODAL ================= -->
+<div id="modal" class="modal">
+    <div class="modal-box">
+
+        <h3>💳 THANH TOÁN</h3>
+
+        <div id="modalTotal">0 ₫</div>
+
+        <input id="cusName" placeholder="Tên khách hàng">
+        <input id="cusPhone" placeholder="Số điện thoại">
+
+        <button onclick="processPayment()" style="background:#00e676;color:#000">
+            XÁC NHẬN THANH TOÁN
+        </button>
+
+        <button onclick="closeModal()" style="background:#ff4d4d;color:#fff">
+            HỦY
+        </button>
+
+    </div>
+</div>
+
+<script>
+
+const API_URL = 'http://localhost:3000/api';
+
+let currentOrderId = null;
+let currentTotal = 0;
+let allOrders = [];
+
+const $ = id => document.getElementById(id);
+
+const formatMoney = a =>
+    new Intl.NumberFormat('vi-VN',{
+        style:'currency',
+        currency:'VND'
+    }).format(a);
+
+// ================= LOAD ORDERS =================
+async function loadPOS(){
+    try {
+        const res = await fetch(`${API_URL}/orders`);
+        allOrders = await res.json();
+
+        const pending = allOrders.filter(o => o.status === 'pending');
+
+        const box = $('pendingOrders');
+
+        if (!pending.length) {
+            box.innerHTML = "<p>Không có đơn</p>";
+            return;
+        }
+
+        box.innerHTML = pending.map(o => `
+            <div class="ticket">
+                <b>#${o.id}</b>
+
+                ${o.items.map(i => `
+                    <div>${i.qty}x ${i.name}</div>
+                `).join('')}
+
+                <div><b>${formatMoney(o.total)}</b></div>
+
+                <button onclick="openModal('${o.id}',${o.total})">
+                    💳 Thu tiền
+                </button>
+
+                <button onclick="printBill('${o.id}')">
+                    🖨 In bill
+                </button>
+            </div>
+        `).join('');
+
+    } catch(err){
+        console.error("Load lỗi:", err);
+    }
+}
+
+// ================= OPEN MODAL (FIX CHÍNH) =================
+function openModal(id,total){
+    currentOrderId = id;
+    currentTotal = total;
+
+    $('modalTotal').innerText = formatMoney(total);
+
+    $('modal').style.display = 'flex';
+}
+
+// ================= CLOSE MODAL =================
+function closeModal(){
+    $('modal').style.display = 'none';
+
+    $('cusName').value = '';
+    $('cusPhone').value = '';
+}
+
+// ================= THANH TOÁN =================
+async function processPayment(){
+
+    const name = $('cusName').value.trim();
+    const phone = $('cusPhone').value.trim();
+
+    try {
+        const res = await fetch(`${API_URL}/orders/${currentOrderId}/pay`,{
+            method:'PUT',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                name,
+                phone,
+                total: currentTotal
+            })
+        });
+
+        const data = await res.json();
+
+        if(data.ok){
+            alert("Thanh toán thành công!");
+            closeModal();
+            loadPOS();
+        }else{
+            alert("Lỗi thanh toán!");
+        }
+
+    } catch(err){
+        console.error(err);
+        alert("Không kết nối server!");
+    }
+}
+
+// ================= PRINT BILL =================
+function printBill(id){
+    const o = allOrders.find(x => x.id == id);
+    if(!o) return;
+
+    const win = window.open('', '', 'width=300,height=500');
+
+    win.document.write(`
+        <body style="font-family:monospace;padding:10px">
+            <h3 style="text-align:center">HONGKONG POS</h3>
+            <p>Mã: ${o.id}</p>
+            <hr>
+
+            ${o.items.map(i => `
+                <div style="display:flex;justify-content:space-between">
+                    <span>${i.qty}x ${i.name}</span>
+                    <span>${formatMoney(i.qty*i.price)}</span>
+                </div>
+            `).join('')}
+
+            <hr>
+            <h3>TỔNG: ${formatMoney(o.total)}</h3>
+        </body>
+    `);
+
+    win.document.close();
+    win.print();
+}
+
+// ENTER = thanh toán nhanh
+$('cusPhone').addEventListener('keypress', e=>{
+    if(e.key === 'Enter') processPayment();
+});
+
+// AUTO LOAD
+loadPOS();
+setInterval(loadPOS,5000);
+
+</script>
+
+</body>
+</html>
